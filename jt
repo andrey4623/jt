@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#
+# Copyright (c) Andrey Kolchanov, 2017.
+#
+
+command -v tree >/dev/null 2>&1 || { echo >&2 "tree command is not installed. Aborting."; exit 1; }
+
+if [ ! -f $1 ]; then
+   echo "File $1 does not exist. Aborting."
+   exit 1
+fi
+
+directory=$(dirname $1)
+filename=$(basename $1)
+original_dir=$PWD
+
+cd $directory
+
+# Delete jar_tree directory if it already exists.
+if [ -d "jar_tree" ]; then
+	rm -rf ./jar_tree
+fi
+
+mkdir jar_tree
+cd jar_tree
+# Extract jar or war file.
+jar -xf ../$filename
+tree
+
+cd $original_dir
